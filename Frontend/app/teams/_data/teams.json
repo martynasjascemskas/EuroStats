@@ -1,0 +1,76 @@
+{
+  "teams": [
+    {
+      "cover": "/teams/AlbaBerlin.png",
+      "title": "Alba Berlin"
+    },
+    {
+      "cover": "/teams/AnadoluEfes.png",
+      "title": "Anadolu Efes Istanbul"
+    },
+    {
+      "cover": "/teams/ASMonaco.png",
+      "title": "AS Monaco"
+    },
+    {
+      "cover": "/teams/BaskoniaVitoriaGasteiz.png",
+      "title": "Baskonia Vitoria-Gasteiz"
+    },
+    {
+      "cover": "/teams/CrvenaZvezdaMeridianbetBelgrade.png",
+      "title": "Crvena Zvezda Meridianbet Belgrade"
+    },
+    {
+      "cover": "/teams/EA7EmporioArmaniMilan.png",
+      "title": "EA7 Emporio Armani Milan"
+    },
+    {
+      "cover": "/teams/FCBarcelona.png",
+      "title": "FC Barcelona"
+    },
+    {
+      "cover": "/teams/FCBayernMunich.png",
+      "title": "FC Bayern Munich"
+    },
+    {
+      "cover": "/teams/FenerbahceBekoIstanbul.png",
+      "title": "Fenerbahce Beko Istanbul"
+    },
+    {
+      "cover": "/teams/LDLCASVELVilleurbanne.png",
+      "title": "LDLC ASVEL Villeurbanne"
+    },
+    {
+      "cover": "/teams/MaccabiPlaytikaTelAviv.png",
+      "title": "Maccabi Playtika Tel Aviv"
+    },
+    {
+      "cover": "/teams/OlympiacosPiraeus.png",
+      "title": "Olympiacos Piraeus"
+    },
+    {
+      "cover": "/teams/PanathinaikosAKTORAthens.png",
+      "title": "Panathinaikos AKTOR Athens"
+    },
+    {
+      "cover": "/teams/ParisBasketball.png",
+      "title": "Paris Basketball"
+    },
+    {
+      "cover": "/teams/PartizanMozzartBetBelgrade.png",
+      "title": "Partizan Mozzart Bet Belgrade"
+    },
+    {
+      "cover": "/teams/RealMadrid.png",
+      "title": "Real Madrid"
+    },
+    {
+      "cover": "/teams/VirtusSegafredoBologna.png",
+      "title": "Virtus Segafredo Bologna"
+    },
+    {
+      "cover": "/teams/ZalgirisKaunas.png",
+      "title": "Zalgiris Kaunas"
+    }
+  ]
+}
