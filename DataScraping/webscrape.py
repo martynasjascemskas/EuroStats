@@ -22,49 +22,51 @@ def getTeams(baseUrl):
 def getTeamStatsLink(teamlink):
     r = requests.get(f'{teamlink}')
     soup = BeautifulSoup(r.content, 'lxml')
-    teamstatslink = soup.find_all('a', class_='page-subnavigation_link__X1cny')
-    team_link = teamstatslink[3]['href']
+    teamstatslink = soup.find_all('a', class_='cursor-pointer')
+    team_link = teamstatslink[2]['href']
+    print(team_link)
     team_name = soup.find('h1', class_='club-info_name___2KwN').text.replace(" Roster", "")
     return team_link, team_name
 
 def getTeamStats(team_link, team_name, allTeamsStats):
     url = f'{team_link}'
-
     options = webdriver.ChromeOptions()
     # Using a pre-configured browsing profile to get around Chrome Cookies on EuroLeague website.
+    options.page_load_strategy = 'none'
     options.add_argument("user-data-dir=C:/Users/Martynas/AppData/Local/Google/Chrome/User Data")
     options.add_argument("profile-directory=Default")
     driver = webdriver.Chrome(options=options)
 
     driver.get(url)
-    WebDriverWait(driver, 10).until(
+    WebDriverWait(driver, 5).until(
         EC.presence_of_all_elements_located((By.CLASS_NAME, 'complex-stat-table_row__XPRhI'))
     )
     is_active_div = driver.find_element(By.CLASS_NAME, 'active--1')
     teamstats = is_active_div.find_elements(By.CLASS_NAME, 'complex-stat-table_row__XPRhI')
 
     for index, stats in enumerate(teamstats, start=2):
+        #print(teamstats[index].text)
         if index < len(teamstats)-2:
-            num_in_team = stats.find_element(By.XPATH, f'//*[@id="main"]/div/div[2]/div/div/div[2]/div[1]/div[3]/div[2]/div/div/div/div/div[{index}]/div[1]').text
-            player_name = stats.find_element(By.XPATH, f'//*[@id="main"]/div/div[2]/div/div/div[2]/div[1]/div[3]/div[2]/div/div/div/div/div[{index}]/div[2]/a/span[2]').text
-            games_played = stats.find_element(By.XPATH , f'//*[@id="main"]/div/div[2]/div/div/div[2]/div[1]/div[3]/div[2]/div/div/div/div/div[{index}]/div[3]').text
-            games_started = stats.find_element(By.XPATH, f'//*[@id="main"]/div/div[2]/div/div/div[2]/div[1]/div[3]/div[2]/div/div/div/div/div[{index}]/div[4]').text
-            minutes_played = stats.find_element(By.XPATH, f'//*[@id="main"]/div/div[2]/div/div/div[2]/div[1]/div[3]/div[2]/div/div/div/div/div[{index}]/div[5]').text
-            points = stats.find_element(By.XPATH, f'//*[@id="main"]/div/div[2]/div/div/div[2]/div[1]/div[3]/div[2]/div/div/div/div/div[{index}]/div[6]').text
-            two_point_percentage = stats.find_element(By.XPATH, f'//*[@id="main"]/div/div[2]/div/div/div[2]/div[1]/div[3]/div[2]/div/div/div/div/div[{index}]/div[7]').text
-            three_point_percentage = stats.find_element(By.XPATH, f'//*[@id="main"]/div/div[2]/div/div/div[2]/div[1]/div[3]/div[2]/div/div/div/div/div[{index}]/div[8]').text
-            free_throw_percentage = stats.find_element(By.XPATH, f'//*[@id="main"]/div/div[2]/div/div/div[2]/div[1]/div[3]/div[2]/div/div/div/div/div[{index}]/div[9]').text
-            offensive_rebounds = stats.find_element(By.XPATH, f'//*[@id="main"]/div/div[2]/div/div/div[2]/div[1]/div[3]/div[2]/div/div/div/div/div[{index}]/div[10]').text
-            defensive_rebounds = stats.find_element(By.XPATH, f'//*[@id="main"]/div/div[2]/div/div/div[2]/div[1]/div[3]/div[2]/div/div/div/div/div[{index}]/div[11]').text
-            total_rebounds = stats.find_element(By.XPATH, f'//*[@id="main"]/div/div[2]/div/div/div[2]/div[1]/div[3]/div[2]/div/div/div/div/div[{index}]/div[12]').text
-            assists = stats.find_element(By.XPATH, f'//*[@id="main"]/div/div[2]/div/div/div[2]/div[1]/div[3]/div[2]/div/div/div/div/div[{index}]/div[13]').text
-            steals = stats.find_element(By.XPATH, f'//*[@id="main"]/div/div[2]/div/div/div[2]/div[1]/div[3]/div[2]/div/div/div/div/div[{index}]/div[14]').text
-            turnover = stats.find_element(By.XPATH, f'//*[@id="main"]/div/div[2]/div/div/div[2]/div[1]/div[3]/div[2]/div/div/div/div/div[{index}]/div[15]').text
-            blocks = stats.find_element(By.XPATH, f'//*[@id="main"]/div/div[2]/div/div/div[2]/div[1]/div[3]/div[2]/div/div/div/div/div[{index}]/div[16]').text
-            blocks_against = stats.find_element(By.XPATH, f'//*[@id="main"]/div/div[2]/div/div/div[2]/div[1]/div[3]/div[2]/div/div/div/div/div[{index}]/div[17]').text
-            fouls_commited = stats.find_element(By.XPATH, f'//*[@id="main"]/div/div[2]/div/div/div[2]/div[1]/div[3]/div[2]/div/div/div/div/div[{index}]/div[18]').text
-            fouls_received = stats.find_element(By.XPATH, f'//*[@id="main"]/div/div[2]/div/div/div[2]/div[1]/div[3]/div[2]/div/div/div/div/div[{index}]/div[19]').text
-            performance_index_rating = stats.find_element(By.XPATH, f'//*[@id="main"]/div/div[2]/div/div/div[2]/div[1]/div[3]/div[2]/div/div/div/div/div[{index}]/div[20]').text
+            num_in_team = stats.find_element(By.XPATH, f'//*[@id="main"]/div/div[2]/div/div/div[2]/div[1]/div[3]/div[2]/div/div/div/div/div/div[{index}]/p[1]').text
+            player_name = stats.find_element(By.XPATH, f'//*[@id="main"]/div/div[2]/div/div/div[2]/div[1]/div[3]/div[2]/div/div/div/div/div/div[{index}]/div/a/p[2]').text
+            games_played = stats.find_element(By.XPATH , f'//*[@id="main"]/div/div[2]/div/div/div[2]/div[1]/div[3]/div[2]/div/div/div/div/div/div[{index}]/p[2]').text
+            games_started = stats.find_element(By.XPATH, f'//*[@id="main"]/div/div[2]/div/div/div[2]/div[1]/div[3]/div[2]/div/div/div/div/div/div[{index}]/p[3]').text
+            minutes_played = stats.find_element(By.XPATH, f'//*[@id="main"]/div/div[2]/div/div/div[2]/div[1]/div[3]/div[2]/div/div/div/div/div/div[{index}]/p[4]').text
+            points = stats.find_element(By.XPATH, f'//*[@id="main"]/div/div[2]/div/div/div[2]/div[1]/div[3]/div[2]/div/div/div/div/div/div[{index}]/p[5]').text
+            two_point_percentage = stats.find_element(By.XPATH, f'//*[@id="main"]/div/div[2]/div/div/div[2]/div[1]/div[3]/div[2]/div/div/div/div/div/div[{index}]/p[6]').text
+            three_point_percentage = stats.find_element(By.XPATH, f'//*[@id="main"]/div/div[2]/div/div/div[2]/div[1]/div[3]/div[2]/div/div/div/div/div/div[{index}]/p[7]').text
+            free_throw_percentage = stats.find_element(By.XPATH, f'//*[@id="main"]/div/div[2]/div/div/div[2]/div[1]/div[3]/div[2]/div/div/div/div/div/div[{index}]/p[8]').text
+            offensive_rebounds = stats.find_element(By.XPATH, f'//*[@id="main"]/div/div[2]/div/div/div[2]/div[1]/div[3]/div[2]/div/div/div/div/div/div[{index}]/p[9]').text
+            defensive_rebounds = stats.find_element(By.XPATH, f'//*[@id="main"]/div/div[2]/div/div/div[2]/div[1]/div[3]/div[2]/div/div/div/div/div/div[{index}]/p[10]').text
+            total_rebounds = stats.find_element(By.XPATH, f'//*[@id="main"]/div/div[2]/div/div/div[2]/div[1]/div[3]/div[2]/div/div/div/div/div/div[{index}]/p[11]').text
+            assists = stats.find_element(By.XPATH, f'//*[@id="main"]/div/div[2]/div/div/div[2]/div[1]/div[3]/div[2]/div/div/div/div/div/div[{index}]/p[12]').text
+            steals = stats.find_element(By.XPATH, f'//*[@id="main"]/div/div[2]/div/div/div[2]/div[1]/div[3]/div[2]/div/div/div/div/div/div[{index}]/p[13]').text
+            turnover = stats.find_element(By.XPATH, f'//*[@id="main"]/div/div[2]/div/div/div[2]/div[1]/div[3]/div[2]/div/div/div/div/div/div[{index}]/p[14]').text
+            blocks = stats.find_element(By.XPATH, f'//*[@id="main"]/div/div[2]/div/div/div[2]/div[1]/div[3]/div[2]/div/div/div/div/div/div[{index}]/p[15]').text
+            blocks_against = stats.find_element(By.XPATH, f'//*[@id="main"]/div/div[2]/div/div/div[2]/div[1]/div[3]/div[2]/div/div/div/div/div/div[{index}]/p[16]').text
+            fouls_commited = stats.find_element(By.XPATH, f'//*[@id="main"]/div/div[2]/div/div/div[2]/div[1]/div[3]/div[2]/div/div/div/div/div/div[{index}]/p[17]').text
+            fouls_received = stats.find_element(By.XPATH, f'//*[@id="main"]/div/div[2]/div/div/div[2]/div[1]/div[3]/div[2]/div/div/div/div/div/div[{index}]/p[18]').text
+            performance_index_rating = stats.find_element(By.XPATH, f'//*[@id="main"]/div/div[2]/div/div/div[2]/div[1]/div[3]/div[2]/div/div/div/div/div/div[{index}]/p[19]').text
             
             team_stats = {
                 'num_in_team': num_in_team,
@@ -89,24 +91,25 @@ def getTeamStats(team_link, team_name, allTeamsStats):
                 'performance_index_rating': performance_index_rating,
                 'Team': team_name,
             }
+            print(team_stats)
             allTeamsStats.append(team_stats)
         else:
-            player_name = stats.find_element(By.XPATH, f'//*[@id="main"]/div/div[2]/div/div/div[2]/div[1]/div[3]/div[2]/div/div/div/div/div[{index}]/div[2]/b').text
-            points = stats.find_element(By.XPATH, f'//*[@id="main"]/div/div[2]/div/div/div[2]/div[1]/div[3]/div[2]/div/div/div/div/div[{index}]/div[6]').text
-            two_point_percentage = stats.find_element(By.XPATH, f'//*[@id="main"]/div/div[2]/div/div/div[2]/div[1]/div[3]/div[2]/div/div/div/div/div[{index}]/div[7]').text
-            three_point_percentage = stats.find_element(By.XPATH, f'//*[@id="main"]/div/div[2]/div/div/div[2]/div[1]/div[3]/div[2]/div/div/div/div/div[{index}]/div[8]').text
-            free_throw_percentage = stats.find_element(By.XPATH, f'//*[@id="main"]/div/div[2]/div/div/div[2]/div[1]/div[3]/div[2]/div/div/div/div/div[{index}]/div[9]').text
-            offensive_rebounds = stats.find_element(By.XPATH, f'//*[@id="main"]/div/div[2]/div/div/div[2]/div[1]/div[3]/div[2]/div/div/div/div/div[{index}]/div[10]').text
-            defensive_rebounds = stats.find_element(By.XPATH, f'//*[@id="main"]/div/div[2]/div/div/div[2]/div[1]/div[3]/div[2]/div/div/div/div/div[{index}]/div[11]').text
-            total_rebounds = stats.find_element(By.XPATH, f'//*[@id="main"]/div/div[2]/div/div/div[2]/div[1]/div[3]/div[2]/div/div/div/div/div[{index}]/div[12]').text
-            assists = stats.find_element(By.XPATH, f'//*[@id="main"]/div/div[2]/div/div/div[2]/div[1]/div[3]/div[2]/div/div/div/div/div[{index}]/div[13]').text
-            steals = stats.find_element(By.XPATH, f'//*[@id="main"]/div/div[2]/div/div/div[2]/div[1]/div[3]/div[2]/div/div/div/div/div[{index}]/div[14]').text
-            turnover = stats.find_element(By.XPATH, f'//*[@id="main"]/div/div[2]/div/div/div[2]/div[1]/div[3]/div[2]/div/div/div/div/div[{index}]/div[15]').text
-            blocks = stats.find_element(By.XPATH, f'//*[@id="main"]/div/div[2]/div/div/div[2]/div[1]/div[3]/div[2]/div/div/div/div/div[{index}]/div[16]').text
-            blocks_against = stats.find_element(By.XPATH, f'//*[@id="main"]/div/div[2]/div/div/div[2]/div[1]/div[3]/div[2]/div/div/div/div/div[{index}]/div[17]').text
-            fouls_commited = stats.find_element(By.XPATH, f'//*[@id="main"]/div/div[2]/div/div/div[2]/div[1]/div[3]/div[2]/div/div/div/div/div[{index}]/div[18]').text
-            fouls_received = stats.find_element(By.XPATH, f'//*[@id="main"]/div/div[2]/div/div/div[2]/div[1]/div[3]/div[2]/div/div/div/div/div[{index}]/div[19]').text
-            performance_index_rating = stats.find_element(By.XPATH, f'//*[@id="main"]/div/div[2]/div/div/div[2]/div[1]/div[3]/div[2]/div/div/div/div/div[{index}]/div[20]').text
+            player_name = stats.find_element(By.XPATH, f'//*[@id="main"]/div/div[2]/div/div/div[2]/div[1]/div[3]/div[2]/div/div/div/div/div/div[{index}]/div/p').text
+            points = stats.find_element(By.XPATH, f'//*[@id="main"]/div/div[2]/div/div/div[2]/div[1]/div[3]/div[2]/div/div/div/div/div/div[{index}]/p[5]').text
+            two_point_percentage = stats.find_element(By.XPATH, f'//*[@id="main"]/div/div[2]/div/div/div[2]/div[1]/div[3]/div[2]/div/div/div/div/div/div[{index}]/p[6]').text
+            three_point_percentage = stats.find_element(By.XPATH, f'//*[@id="main"]/div/div[2]/div/div/div[2]/div[1]/div[3]/div[2]/div/div/div/div/div/div[{index}]/p[7]').text
+            free_throw_percentage = stats.find_element(By.XPATH, f'//*[@id="main"]/div/div[2]/div/div/div[2]/div[1]/div[3]/div[2]/div/div/div/div/div/div[{index}]/p[8]').text
+            offensive_rebounds = stats.find_element(By.XPATH, f'//*[@id="main"]/div/div[2]/div/div/div[2]/div[1]/div[3]/div[2]/div/div/div/div/div/div[{index}]/p[9]').text
+            defensive_rebounds = stats.find_element(By.XPATH, f'//*[@id="main"]/div/div[2]/div/div/div[2]/div[1]/div[3]/div[2]/div/div/div/div/div/div[{index}]/p[10]').text
+            total_rebounds = stats.find_element(By.XPATH, f'//*[@id="main"]/div/div[2]/div/div/div[2]/div[1]/div[3]/div[2]/div/div/div/div/div/div[{index}]/p[11]').text
+            assists = stats.find_element(By.XPATH, f'//*[@id="main"]/div/div[2]/div/div/div[2]/div[1]/div[3]/div[2]/div/div/div/div/div/div[{index}]/p[12]').text
+            steals = stats.find_element(By.XPATH, f'//*[@id="main"]/div/div[2]/div/div/div[2]/div[1]/div[3]/div[2]/div/div/div/div/div/div[{index}]/p[13]').text
+            turnover = stats.find_element(By.XPATH, f'//*[@id="main"]/div/div[2]/div/div/div[2]/div[1]/div[3]/div[2]/div/div/div/div/div/div[{index}]/p[14]').text
+            blocks = stats.find_element(By.XPATH, f'//*[@id="main"]/div/div[2]/div/div/div[2]/div[1]/div[3]/div[2]/div/div/div/div/div/div[{index}]/p[15]').text
+            blocks_against = stats.find_element(By.XPATH, f'//*[@id="main"]/div/div[2]/div/div/div[2]/div[1]/div[3]/div[2]/div/div/div/div/div/div[{index}]/p[16]').text
+            fouls_commited = stats.find_element(By.XPATH, f'//*[@id="main"]/div/div[2]/div/div/div[2]/div[1]/div[3]/div[2]/div/div/div/div/div/div[{index}]/p[17]').text
+            fouls_received = stats.find_element(By.XPATH, f'//*[@id="main"]/div/div[2]/div/div/div[2]/div[1]/div[3]/div[2]/div/div/div/div/div/div[{index}]/p[18]').text
+            performance_index_rating = stats.find_element(By.XPATH, f'//*[@id="main"]/div/div[2]/div/div/div[2]/div[1]/div[3]/div[2]/div/div/div/div/div/div[{index}]/p[19]').text
             team_stats = {
                 'num_in_team': None,
                 'player_name': team_name + " " + player_name,
